@@ -1,0 +1,8 @@
+ticker 1 : loopaction, loop
+# Main memory structure
+: B=\left[0for i=\left[1...4000\right]\right]
+
+# Operations on memory
+: set(l, i, v) = \left[ifval(l, i, c, v) for c = \left[1...length(l)\right]\right]
+: setlistval(i, v) = B -> set(B, i, v)
+: incx(i,v) = setlistval(i, B[i]+v)

@@ -1,6 +1,6 @@
 # desmos reserved keywords. think function names, and other verbs
 # like with, etc.
-reserved_keywords = "sin cos tan csc sec cot mean median min max quertile quantile stdev stdevp var mad cov covp corr spearman stats count total join sort shuffle unique for histogram dotplot boxplot normaldist tdist poissondist binomialdist uniformdist pdf cdf inversecdf random ttest tscore ittest frac sinh cosh tanh csch sech coth polygon distance midpoint rgb hsv lcm gcd mod ceil floor round sign nPr nCr log with cdot to in length left right"
+reserved_keywords = "sin cos tan csc sec cot mean median min max quertile quantile stdev stdevp var mad cov covp corr spearman stats count total join sort shuffle unique for histogram dotplot boxplot normaldist tdist poissondist binomialdist uniformdist pdf cdf inversecdf random ttest tscore ittest frac sinh cosh tanh csch sech coth polygon distance midpoint rgb hsv lcm gcd mod ceil floor round sign nPr nCr log with cdot to in length left right operatorname"
 reserved_keywords = reserved_keywords.split(' ')
 
 def continue_lines(string):
@@ -22,8 +22,24 @@ def split_linewise(string):
 def merge_multiple_spaces(string):
     return ' '.join(string.split())
 
+def curly_brackets(string):
+    return string.replace('{', '\\left\\{').replace('}', '\\right\\}')
+
+def parens(string):
+    return string.replace('(', '\\left(').replace(')', '\\right)')
+
+def for_fix(string):
+    return string \
+        .replace('for\\ ', "\\operatorname{for}") \
+        .replace('for', "\\operatorname{for}")    \
+        .replace('length\\ ', "\\operatorname{length}") \
+        .replace('length', "\\operatorname{length}")
+
 def make_spaces_permanant(string):
-    return string.replace(' ', '\\ ')
+    return string.replace(' ', '\ ')
+
+def change_square_brackets(string):
+    return string.replace('[', '\\left[').replace(']', '\\right]')
 
 def subscriptize(string):
     output = ""
@@ -138,9 +154,21 @@ class Parser:
             if not line["comment"]:
                 # now, remove multiple spaces in lines, replacing them with one.
                 lines[index].latex = merge_multiple_spaces(line.latex)
+
+                # replace curly brackets and parens
+                lines[index].latex = curly_brackets(line.latex)
+                lines[index].latex = parens(line.latex)
             
                 # convert things like testing to t_{esting}
                 lines[index].latex = subscriptize(line.latex)
+
+                # change square brackets to \\left[ and \\right]
+                lines[index].latex = change_square_brackets(line.latex)
+
+                print(lines[index].latex)
+                # replace for with \\operatorname{for}
+                lines[index].latex = for_fix(line.latex)
+                print(lines[index].latex)
 
                 # make the spaces escaped and 'permanant'
                 lines[index].latex = make_spaces_permanant(line.latex)

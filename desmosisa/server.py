@@ -6,7 +6,7 @@ import json
 import random
 import queue
 import functools
-from parser import Parser
+from .parser import Parser, Statement
 from watchdog.events import FileSystemEventHandler
 from watchdog.events import FileModifiedEvent
 from watchdog.observers import Observer
@@ -19,7 +19,7 @@ class FSEHandler(FileSystemEventHandler):
     def on_modified(self, event):
         self.queue.put("")
 
-async def serv(websocket, file):
+async def serv(websocket, file, overrides={}):
     message = await websocket.recv()
     lmtime = 0
     epsilon = 0.25 # tweak this to what makes sense. 0.25 seconds makes sense to me.
@@ -44,7 +44,7 @@ async def serv(websocket, file):
             continue
         else:
             lmtime = time.time()
-        
+
         parser = Parser(file)
         parser.parse()
 
@@ -52,7 +52,7 @@ async def serv(websocket, file):
             json.dumps(
                 {
                     "message": "clear",
-                    "payload": "none",    
+                    "payload": "none",
                 }
             )
         )
@@ -70,25 +70,38 @@ async def serv(websocket, file):
                 )
 
                 continue
-                
-            if not line["comment"]:
-                await websocket.send(
-                    json.dumps(
-                        {
-                            "message": "expression",
-                            "id": "placeholder" + str(random.randint(1, 100100)),
-                            "payload": line.latex,
-                        }
-                    )
+
+            # if the line has been assigned an id, make it so
+            if line["id"]:
+                ident = line.commands["id"]
+                print("performing substitution")
+            else:
+                # else just choose a safe option
+                ident = "placeholder" + str(random.randint(1, 100100))
+
+            if ident in overrides.keys():
+                to_send = overrides[ident]
+            else:
+                to_send = line.latex
+
+
+            await websocket.send(
+                json.dumps(
+                    {
+                        "message": "expression",
+                        "id": ident,
+                        "payload": to_send,
+                    }
                 )
-            
-async def start_server(file):
-    wrapper = functools.partial(serv, file=file)
+            )
+
+async def start_server(file, overrides):
+    wrapper = functools.partial(serv, file=file, overrides=overrides)
     async with serve(wrapper, "localhost", 8765):
         await asyncio.Future()
 
-def main(file):
-    asyncio.run(start_server(file))
+def main(file, overrides):
+    asyncio.run(start_server(file, overrides))
 
 if __name__ == "__main__":
     main("data/testing.desmos")

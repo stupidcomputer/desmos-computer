@@ -11,6 +11,8 @@ INSTRUCTIONS
 ------------
 
 STO ( value, address ) -> store a value into an address
+MOV ( fromaddr, toaddr) -> move a value from one address to another
+PSTO ( value, ptr ) -> store value into the address referenced in ptr
 ADD ( addra, addrb, toaddr ) -> add a value from two addresses to a third address
 SUB ( addra, addrb, toaddr ) -> subtract a value from two addresses to a third address
 MUL ( addra, addrb, toaddr ) -> multiply a value from two addresses to a third address

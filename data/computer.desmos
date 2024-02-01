@@ -1,7 +1,6 @@
-ticker 1 : loopaction, loop
+ticker 1 : main
 # Main memory structure
-: B = [1...100] * 0
-
+id testing : B = [1, 4, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 # Operations on memory
 : q(l, v, i)=ifval(l, i, [1...length(l)], v)
 : setlistval(index, v) = B -> q(B, v, index)
@@ -21,11 +20,16 @@ ticker 1 : loopaction, loop
 : idiv(a, b, t_o) = setlistval(t_o, odiv(B[a], B[b]))
 : imul(a, b, t_o) = setlistval(t_o, omul(B[a], B[b]))
 
-: icmp(a, b, z) = { a = b : equals -> 1 , a > b : greater -> 1 , a < b : less -> 1}
+: icmp(a, b, z) = { \
+    a = b : equals -> 1 , \
+    a > b : greater -> 1 , \
+    a < b : less -> 1 \
+  }
 : irst(a, b, c) = equals -> 0, greater -> 0, less -> 0
 : ield(addr, b) = setlistval(addr, equals)
 : igld(addr, b) = setlistval(addr, greater)
 : illd(addr, b) = setlistval(addr, less)
+
 
 : ibe(addr, b, c) = {equals = 1 : ijmp(addr, 0, 0), jumped -> 1}
 : ibne(addr, b, c) = {equals = 0 : ijmp(addr, 0, 0), jumped -> 1}
@@ -84,6 +88,7 @@ ticker 1 : loopaction, loop
 
 : loop = {execution = 0 : execution -> 1, execution = 1 : execution -> 2, execution = 2 : execution -> 0}
 : loopaction = {execution = 0 : load(ip), execution = 1 : exec, execution = 2 : incip}
+: main = loopaction, loop
 
 : sto = 1
 : add = 2

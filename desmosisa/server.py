@@ -96,8 +96,10 @@ async def serv(websocket, file, overrides={}):
             )
 
 async def start_server(file, overrides):
+    print("starting server")
     wrapper = functools.partial(serv, file=file, overrides=overrides)
-    async with serve(wrapper, "localhost", 8765):
+    async with serve(wrapper, "localhost", 8764):
+        print("starting server for realz")
         await asyncio.Future()
 
 def main(file, overrides):

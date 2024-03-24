@@ -1,5 +1,5 @@
 function main() {
-    let socket = new WebSocket("ws://localhost:8765");
+    let socket = new WebSocket("ws://localhost:8764");
     var ids = [];
 
     socket.onopen = function(e) {

@@ -1,4 +1,55 @@
-desmos-computer
----------------
+# desmos-computer
 
-resources for building a computer inside desmos
+## What is this?
+- a client-server architecture for synchronizing a file containing Desmos expressions to a graph,
+- a test suite for evaluating the 'correctness' of Desmos expressions,
+- an instruction set architecture for Turing machines whose cells contain IEEE 754 compliant integers in each cell,
+- an assembler for that instruction set architecture,
+- and other utilities.
+
+## How does the ISA work?
+The 'CPU', implemented in Desmos, takes in a list (aka an array, Turing tape, etc.) and starts execution at cell 1 (lists have 1-based indexes in Desmos).
+The list also serves as the memory, as well. (Think like Befunge's `p` command.
+
+*Todo: disconnect opcode definitions and opcodes from the actual CPU implementation. Because of this, don't rely on this table! Check the implementation in `data/computer.desmos`.*
+
+| Instruction mnemonic   | Behavior                                                                                                                         | First parameter         | Second parameter | Third parameter |
+|-|-|-|-|-|
+| `jmp`                  | Modify the instruction pointer and continue execution at the new location.                                                       | New instruction pointer | *n/a*            | *n/a*           |
+| `add`                  | Take the values in addresses `a` and `b` and add them; store the result in address `c`.                                          | address `a`             | address `b`      | address `c`     |
+| `sub`                  | See `add` instruction.                                                                                                           | *ld.*                   | *ld.*            | *ld.*           |
+| `div`                  | See `add` instruction.                                                                                                           | *ld.*                   | *ld.*            | *ld.*           |
+| `mul`                  | See `add` instruction.                                                                                                           | *ld.*                   | *ld.*            | *ld.*           |
+| `cmp`                  | Compare the numbers in `a` and `b`. If `a` > `b`, set the greater than flag. Ditto for equals and less operators, as well. | address `a`             | address `b`      | *n/a*           |
+| `rst`                  | Clear the equals, greater, and less than flags.                                                                                  | *n/a*                   | *n/a*            | *n/a*           |
+| `eld`                  | Write the state of the equals flag to address `a`. If it's set, than `1` is written; `0` otherwise.                          | address `a`             | *n/a*            | *n/a*           |
+| `gld`                  | Same as `eld`, but for the greater than flag.                                                                                    | *ld.*                   | *n/a*            | *n/a*           |
+| `lld`                  | Same as `eld`, but for the less than flag.                                                                                       | *ld.*                   | *n/a*            | *n/a*           |
+| `be`                   | Branch to address `a` if the equal flag is set.                                                                                  | address `a`             | *n/a*            | *n/a*           |
+| `bne`                  | Same as `be`, but the !equal flag.                                                                                               | *ld.*                   | *n/a*            | *n/a*           |
+| `bg`                   | Same as `be`, but the greater than flag.                                                                                         | *ld.*                   | *n/a*            | *n/a*           |
+| `bl`                   | Same as `be`, but the less than flag.                                                                                            | *ld.*                   | *n/a*            | *n/a*           |
+| `sto`                  | STOre the immediate value `v` into address `a`.                                                                                  | `v`                     | address `a`      | *n/a*           |
+| `mov`                  | MOVe the value in the address `a` into address `b`.                                                                              | address `a`             | address `b`      | *n/a*           |
+
+There are some other instructions, like `psto` and similar variants. They're experimental.
+
+## Instruction design in general
+Things we're optimizing for:
+
+- *Pack as many things into one instruction as possible.* Execution of stuff in instructions is cheap, but each instruction execution is expensive.
+- *No stacks.* Stacks require too much computation on the ISA side itself that isn't provided by the Desmos 'standard library' of instructions.
+
+In general: *embed the intelligence into the machine code, **not** the CPU/ISA!*
+
+## Things to do
+- [ ] Write a test suite for evaluating arbitrary Desmos expressions and getting their expected outputs.
+- [ ] Write an assembler to compile a custom Assembly language to native Desmos list format.
+- [ ] Simplify all this into a command line tool.
+- [ ] Simplify the synchronization stack.
+- [ ] Write documentation for all of this.
+
+## License
+
+This project is licensed under the AGPLv3. See the `LICENSE` file for more information.
+Copyright rndusr, randomuser, stupidcomputer 2024.

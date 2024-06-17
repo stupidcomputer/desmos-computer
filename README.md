@@ -48,6 +48,16 @@ In general: *embed the intelligence into the machine code, **not** the CPU/ISA!*
 - [x] Simplify the synchronization stack.
 - [ ] Write documentation for all of this.
 
+## Running tests
+
+- Enter the nix-shell, then start a web browser.
+- Navigate to `https://desmos.com/calculator`, and open the dev console
+- Run `python3 -m cli sync -c` to copy the userscript to your clipboard
+- Run the userscript in the console
+- Run `main()` in the console
+- Run `python3 -m unittest ./cli/tests/isa.py`, or other test groups if needed
+- Keep the Desmos tab focused, as it may impede the ISA testing process
+
 ## License
 
 This project is licensed under the AGPLv3. See the `LICENSE` file for more information.

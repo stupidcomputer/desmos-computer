@@ -31,7 +31,6 @@ def instruction_test_helper(override_text, expected_output):
     })
     server.start()
 
-    time.sleep(1)
     return server.outputs[-1]["output"] == "true"
 
 class ISATest(unittest.TestCase):
@@ -80,5 +79,79 @@ class ISATest(unittest.TestCase):
             instruction_test_helper(
                 [14, 1, 6, 5, 0, 4], # 14 / 4 = 3.5
                 [14, 1, 6, 5, 3.5, 4],
+            )
+        )
+
+    def test_jmp(self):
+        self.assertTrue(
+            instruction_test_helper(
+                [7, 10, 0, 0, 0, 0, 0, 0, 0, 1, 3, 3], # jump to addr 10
+                [7, 10, 3, 0, 0, 0, 0, 0, 0, 1, 3, 3]
+            )
+        )
+
+    def test_cmp_eq(self):
+        self.assertTrue(
+            instruction_test_helper(
+                # check if 3 is equal to 3. if so, store 3 into addr 3, otherwise store 1 into address 2
+                [3, 1, 1, 8, 10, 1, 1, 2, 0, 1, 3, 3],
+                [3, 1, 3, 8, 10, 1, 1, 2, 0, 1, 3, 3],
+            )
+        )
+
+    def test_cmp_neq(self):
+        self.assertTrue(
+            instruction_test_helper(
+                # check if 3 is equal to 1. if not, store 3 into addr 3, otherwise store 1 into address 2
+                [3, 1, 2, 9, 10, 1, 1, 2, 0, 1, 3, 3],
+                [3, 1, 3, 9, 10, 1, 1, 2, 0, 1, 3, 3],
+            )
+        )
+
+    def test_cmp_gt(self):
+        self.assertTrue(
+            instruction_test_helper(
+                [3, 1, 2, 10, 10, 1, 1, 2, 0, 1, 3, 3],
+                [3, 1, 3, 10, 10, 1, 1, 2, 0, 1, 3, 3],
+            )
+        )
+
+    def test_cmp_lt(self):
+        self.assertTrue(
+            instruction_test_helper(
+                [3, 1, 4, 11, 10, 1, 1, 2, 0, 1, 3, 3],
+                [3, 1, 4, 11, 10, 1, 1, 2, 0, 1, 3, 3],
+            )
+        )
+
+    def test_eld(self):
+        self.assertTrue(
+            instruction_test_helper(
+                [3, 1, 1, 4, 1],
+                [1, 1, 1, 4, 1],
+            )
+        )
+
+    def test_gld(self):
+        self.assertTrue(
+            instruction_test_helper(
+                [3, 4, 1, 5, 1],
+                [1, 4, 1, 5, 1],
+            )
+        )
+
+    def test_lld(self):
+        self.assertTrue(
+            instruction_test_helper(
+                [3, 1, 4, 6, 1],
+                [1, 1, 4, 6, 1],
+            )
+        )
+
+    def test_mov(self):
+        self.assertTrue(
+            instruction_test_helper(
+                [17, 1, 2],
+                [17, 17, 2]
             )
         )

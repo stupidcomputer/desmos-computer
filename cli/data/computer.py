@@ -22,10 +22,10 @@ id testing : B = []
 : idiv(a, b, t_o) = setlistval(t_o, odiv(B[a], B[b]))
 : imul(a, b, t_o) = setlistval(t_o, omul(B[a], B[b]))
 
-: icmp(a, b, z) = { \
-    a = b : equals -> 1 , \
-    a > b : greater -> 1 , \
-    a < b : less -> 1 \
+: icmp(a, b, z) = { \\
+    B[a] = B[b] : equals -> 1 , \\
+    B[a] > B[b] : greater -> 1 , \\
+    B[a] < B[b] : less -> 1 \\
   }
 : irst(a, b, c) = equals -> 0, greater -> 0, less -> 0
 : ield(addr, b) = setlistval(addr, equals)
@@ -40,7 +40,6 @@ id testing : B = []
 
 : isto(v, addr) = setlistval(addr, v)
 : imov(from, target) = setlistval(target, B[from])
-: ipsto(value, ptr) = setlistval(B[ptr], value)
 
 # registers
 # instruction pointer
@@ -64,27 +63,26 @@ id testing : B = []
 : paramthree = 0
 
 # main execution flows
-: load(addr) = jumped -> 0, inst -> B[addr], \
-    paramone -> B[addr + 1], \
-    paramtwo -> B[addr + 2], \
+: load(addr) = jumped -> 0, inst -> B[addr], \\
+    paramone -> B[addr + 1], \\
+    paramtwo -> B[addr + 2], \\
     paramthree -> B[addr + 3]
-: exec = { \
-    inst = sto  : isto(paramone, paramtwo), \
-    inst = psto : ipsto(paramone, paramtwo), \
-    inst = mov  : imov(paramone, paramtwo), \
-    inst = add  : iadd(paramone, paramtwo, paramthree), \
-    inst = cmp  : icmp(paramone, paramtwo, paramthree), \
-    inst = eld  : ield(paramone, paramtwo), \
-    inst = gld  : igld(paramone, paramtwo), \
-    inst = lld  : illd(paramone, paramtwo), \
-    inst = jmp  : ijmp(paramone, paramtwo, paramthree), \
-    inst = be   : ibe(paramone, paramtwo, paramthree), \
-    inst = bne  : ibne(paramone, paramtwo, paramthree), \
-    inst = bg   : ibg(paramone, paramtwo, paramthree), \
-    inst = bl   : ibl(paramone, paramtwo, paramthree), \
-    inst = sub  : isub(paramone, paramtwo, paramthree), \
-    inst = mul  : imul(paramone, paramtwo, paramthree), \
-    inst = div  : idiv(paramone, paramtwo, paramthree) \
+: exec = { \\
+    inst = sto  : isto(paramone, paramtwo), \\
+    inst = mov  : imov(paramone, paramtwo), \\
+    inst = add  : iadd(paramone, paramtwo, paramthree), \\
+    inst = cmp  : icmp(paramone, paramtwo, paramthree), \\
+    inst = eld  : ield(paramone, paramtwo), \\
+    inst = gld  : igld(paramone, paramtwo), \\
+    inst = lld  : illd(paramone, paramtwo), \\
+    inst = jmp  : ijmp(paramone, paramtwo, paramthree), \\
+    inst = be   : ibe(paramone, paramtwo, paramthree), \\
+    inst = bne  : ibne(paramone, paramtwo, paramthree), \\
+    inst = bg   : ibg(paramone, paramtwo, paramthree), \\
+    inst = bl   : ibl(paramone, paramtwo, paramthree), \\
+    inst = sub  : isub(paramone, paramtwo, paramthree), \\
+    inst = mul  : imul(paramone, paramtwo, paramthree), \\
+    inst = div  : idiv(paramone, paramtwo, paramthree) \\
 }
 : incip = {jumped = 0 : ip -> ip + instwidth[inst] + 1}
 
@@ -97,7 +95,6 @@ id testing : B = []
 : main = loopaction, loop
 
 : sto = 1
-: psto = 16
 : mov = 17
 : add = 2
 : cmp = 3
@@ -114,5 +111,5 @@ id testing : B = []
 : div = 14
 : rst = 15
 
-: instwidth = [2,3,1,1,1,1,1,1,1,1,3,3,3,3,0,2,2]
+: instwidth = [2,3,2,1,1,1,1,1,1,1,3,3,3,3,0,2,2]
 """

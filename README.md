@@ -1,15 +1,14 @@
 # desmos-computer
 
 ## What is this?
-- a client-server architecture for synchronizing a file containing Desmos expressions to a graph,
-- a test suite for evaluating the 'correctness' of Desmos expressions,
-- an instruction set architecture for Turing machines whose cells contain IEEE 754 compliant integers in each cell,
-- an assembler for that instruction set architecture,
-- and other utilities.
+- a client-server architecture for synchronizing a file containing Desmos expressions to a graph, (`cli/lib/server.py` and `cli/lib/clientside.py`)
+- an instruction set architecture for Turing machines whose cells contain IEEE 754 compliant integers in each cell, (`cli/data/computer.py`)
+- an assembler for that instruction set architecture, (not yet!)
+- and other utilities. (disassembler, etc.)
 
 ## How does the ISA work?
 The 'CPU', implemented in Desmos, takes in a list (aka an array, Turing tape, etc.) and starts execution at cell 1 (lists have 1-based indexes in Desmos).
-The list also serves as the memory, as well. (Think like Befunge's `p` command.
+The list also serves as the memory, as well. (Think like Befunge's `p` command.)
 
 *Todo: disconnect opcode definitions and opcodes from the actual CPU implementation. Because of this, don't rely on this table! Check the implementation in `data/computer.desmos`.*
 
@@ -43,10 +42,10 @@ Things we're optimizing for:
 In general: *embed the intelligence into the machine code, **not** the CPU/ISA!*
 
 ## Things to do
-- [ ] Write a test suite for evaluating arbitrary Desmos expressions and getting their expected outputs.
+- [x] Write a test suite for the various instruction of the ISA executing *in Desmos*
 - [ ] Write an assembler to compile a custom Assembly language to native Desmos list format.
 - [ ] Simplify all this into a command line tool.
-- [ ] Simplify the synchronization stack.
+- [x] Simplify the synchronization stack.
 - [ ] Write documentation for all of this.
 
 ## License

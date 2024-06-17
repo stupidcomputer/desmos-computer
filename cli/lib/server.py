@@ -89,18 +89,25 @@ class DesmosGraphServer:
                     }
                 )
 
-        self.stop.set_result("sotp please!!!!")
+        if self.stop:
+            self.stop.set_result("sotp please!!!!")
 
     async def main(self, stop):
         async with serve(self.ws_main, "localhost", 8764):
             self.stop = stop
-            await stop
+            if not stop:
+                await asyncio.Future()
+            else:
+                await stop
 
-    def start(self):
+    def start(self, no_stop=False):
         loop = asyncio.get_event_loop()
         stop = loop.create_future()
 
-        loop.run_until_complete(self.main(stop))
+        if no_stop:
+            loop.run_until_complete(self.main(stop=None))
+        else:
+            loop.run_until_complete(self.main(stop=stop))
 
     def append_inst(self, inst):
         self.instructions_to_run.append(inst)

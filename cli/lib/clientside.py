@@ -11,6 +11,8 @@ function arraysEqual(a, b) {
   return true;
 }
 
+var refresh = true;
+
 function main() {
     let socket = new WebSocket("ws://localhost:8764");
     var toCompare = "";
@@ -21,9 +23,11 @@ function main() {
     }
 
     socket.onclose = function(e) {
-        setTimeout(function() {
-          main();
-        }, 1000);
+        if (refresh) {
+            setTimeout(function() {
+              main();
+            }, 1000);
+        }
     }
 
     socket.onmessage = function(e) {
@@ -83,5 +87,5 @@ function main() {
             console.log(`[LOG] couldn't parse message ${e.data}`)
         }
     }
-} main();
+}
 """

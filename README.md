@@ -1,5 +1,7 @@
 # desmos-computer
 
+available on [Gitea](https://git.beepboop.systems/stupidcomputer/desmos-computer) and [Github](https://github.com/stupidcomputer/desmos-computer)
+
 ## What is this?
 - a client-server architecture for synchronizing a file containing Desmos expressions to a graph, (`cli/lib/server.py` and `cli/lib/clientside.py`)
 - an instruction set architecture for Turing machines whose cells contain IEEE 754 compliant integers in each cell, (`cli/data/computer.py`)
@@ -43,6 +45,7 @@ In general: *embed the intelligence into the machine code, **not** the CPU/ISA!*
 
 ## Things to do
 - [x] Write a test suite for the various instruction of the ISA executing *in Desmos*
+- [ ] Make the test suite reliable.
 - [ ] Write an assembler to compile a custom Assembly language to native Desmos list format.
 - [ ] Simplify all this into a command line tool.
 - [x] Simplify the synchronization stack.
@@ -57,6 +60,12 @@ In general: *embed the intelligence into the machine code, **not** the CPU/ISA!*
 - Run `main()` in the console
 - Run `python3 -m unittest ./cli/tests/isa.py`, or other test groups if needed
 - Keep the Desmos tab focused, as it may impede the ISA testing process
+
+A note: the test suite might fail if you run it weirdly.
+If it fails, run it again.
+It might work, in which case you're good.
+
+(This is cursed and I know it.)
 
 ## License
 
